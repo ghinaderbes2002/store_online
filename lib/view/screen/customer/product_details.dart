@@ -21,198 +21,248 @@ class ProductDetailsPage extends StatelessWidget {
       controller.fetchProductDetails(productId);
     });
 
-    return Scaffold(
-      backgroundColor: Colors.grey.shade50,
-      appBar: AppBar(
-        title: const Text(
-          "تفاصيل المنتج",
-          style: TextStyle(fontWeight: FontWeight.bold),
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        backgroundColor: Colors.grey.shade50,
+        appBar: AppBar(
+          title: const Text(
+            "تفاصيل المنتج",
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+          ),
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.blue,
+          automaticallyImplyLeading: false,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.arrow_forward),
+              onPressed: () => Get.back(),
+            ),
+          ],
         ),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
-      ),
-      body: GetBuilder<ProductCustomerController>(
-        builder: (controller) {
-          if (controller.isLoadingProductDetails) {
-            return const Center(child: CircularProgressIndicator());
-          }
+        body: GetBuilder<ProductCustomerController>(
+          builder: (controller) {
+            if (controller.isLoadingProductDetails) {
+              return const Center(
+                child: CircularProgressIndicator(color: Colors.blue),
+              );
+            }
 
-          if (controller.productDetails == null) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.error_outline, size: 80, color: Colors.grey[300]),
-                  const SizedBox(height: 16),
-                  const Text(
-                    "لا توجد بيانات للمنتج",
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          final ProductModel product = controller.productDetails!;
-
-          return Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // بطاقة المنتج الرئيسية
-                      Container(
-                        margin: const EdgeInsets.all(16),
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.08),
-                              blurRadius: 15,
-                              offset: const Offset(0, 5),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // اسم المنتج
-                            Text(
-                              product.name,
-                              style: const TextStyle(
-                                fontSize: 26,
-                                fontWeight: FontWeight.bold,
-                                height: 1.3,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-
-                            // السعر الكبير
-                            Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(20),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Colors.green.shade400,
-                                    Colors.green.shade600,
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: Column(
-                                children: [
-                                  const Text(
-                                    "السعر",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.white70,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "${(product.priceCents / 100).toStringAsFixed(0)}",
-                                        style: const TextStyle(
-                                          fontSize: 42,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                          height: 1,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 4),
-                                      const Padding(
-                                        padding: EdgeInsets.only(top: 8),
-                                        child: Text(
-                                          "ل.س",
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+            if (controller.productDetails == null) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      size: 80,
+                      color: Colors.grey[300],
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      "لا توجد بيانات للمنتج",
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey.shade600,
+                        fontWeight: FontWeight.w500,
                       ),
+                    ),
+                  ],
+                ),
+              );
+            }
 
-                      // بطاقة المعلومات
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Container(
-                          padding: const EdgeInsets.all(16),
+            final ProductModel product = controller.productDetails!;
+
+            return Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 20),
+
+                        // بطاقة المنتج الرئيسية
+                        // بطاقة المنتج الرئيسية
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 20),
+                          padding: const EdgeInsets.all(24),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: Colors.blue,
                             borderRadius: BorderRadius.circular(16),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
-                                blurRadius: 10,
-                                offset: const Offset(0, 2),
+                                color: Colors.blue.withOpacity(0.3),
+                                blurRadius: 20,
+                                offset: const Offset(0, 8),
                               ),
                             ],
                           ),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _buildInfoRow(
-                                Icons.inventory_2_outlined,
-                                "الكمية المتوفرة",
-                                "${product.stockQty} قطعة",
-                                product.stockQty > 10
-                                    ? Colors.green
-                                    : product.stockQty > 0
-                                    ? Colors.orange
-                                    : Colors.red,
+                              // صورة المنتج
+                              Container(
+                                width: double.infinity,
+                                height: 200,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: Colors.white.withOpacity(0.1),
+                                ),
+                                child:
+                                    product.imageUrl != null &&
+                                        product.imageUrl!.isNotEmpty
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(12),
+                                        child: Image.network(
+                                          product.imageUrl!,
+                                          fit: BoxFit.cover,
+                                          width: double.infinity,
+                                          height: 200,
+                                        ),
+                                      )
+                                    : const Icon(
+                                        Icons.shopping_bag,
+                                        size: 80,
+                                        color: Colors.white,
+                                      ),
                               ),
-                              const Divider(height: 24),
-                              _buildInfoRow(
-                                product.isActive
-                                    ? Icons.check_circle
-                                    : Icons.cancel,
-                                "حالة المنتج",
-                                product.isActive ? "متوفر" : "غير متوفر",
-                                product.isActive ? Colors.green : Colors.red,
+                              const SizedBox(height: 20),
+
+                              // اسم المنتج
+                              Text(
+                                product.name,
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                  height: 1.3,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+
+                              // الوصف
+                              if (product.description != null &&
+                                  product.description!.isNotEmpty)
+                                Text(
+                                  product.description!,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.white70,
+                                    height: 1.4,
+                                  ),
+                                ),
+                              const SizedBox(height: 20),
+
+                              // السعر
+                              Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "${(product.priceCents / 100).toStringAsFixed(0)}",
+                                      style: const TextStyle(
+                                        fontSize: 36,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.blue,
+                                        height: 1,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    const Padding(
+                                      padding: EdgeInsets.only(top: 6),
+                                      child: Text(
+                                        "ل.س",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.blue,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
                         ),
-                      ),
 
-                      // المواصفات
-                      if (product.features != null &&
-                          product.features!.isNotEmpty)
+                        const SizedBox(height: 20),
+
+                        // بطاقة المعلومات
                         Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: _buildFeaturesSection(product),
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Container(
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.04),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              children: [
+                                _buildInfoRow(
+                                  Icons.inventory_2_outlined,
+                                  "الكمية المتوفرة",
+                                  "${product.stockQty} قطعة",
+                                  product.stockQty > 10
+                                      ? Colors.blue
+                                      : product.stockQty > 0
+                                      ? Colors.orange
+                                      : Colors.red,
+                                ),
+                                const SizedBox(height: 16),
+                                Divider(color: Colors.grey.shade200, height: 1),
+                                const SizedBox(height: 16),
+                                _buildInfoRow(
+                                  product.isActive
+                                      ? Icons.check_circle_rounded
+                                      : Icons.cancel_rounded,
+                                  "حالة المنتج",
+                                  product.isActive ? "متوفر" : "غير متوفر",
+                                  product.isActive ? Colors.blue : Colors.red,
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                    ],
+
+                        // المواصفات
+                        if (product.features != null &&
+                            product.features!.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: _buildFeaturesSection(product),
+                          ),
+
+                        const SizedBox(height: 20),
+                      ],
+                    ),
                   ),
                 ),
-              ),
 
-              // شريط الأسفل
-              _buildBottomBar(product),
-            ],
-          );
-        },
+                // شريط الأسفل
+                _buildBottomBar(product),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -223,10 +273,10 @@ class ProductDetailsPage extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.15),
+            color: color.withOpacity(0.1),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(icon, color: color, size: 26),
+          child: Icon(icon, color: color, size: 24),
         ),
         const SizedBox(width: 16),
         Expanded(
@@ -236,7 +286,7 @@ class ProductDetailsPage extends StatelessWidget {
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 13,
                   color: Colors.grey[600],
                   fontWeight: FontWeight.w500,
                 ),
@@ -245,8 +295,8 @@ class ProductDetailsPage extends StatelessWidget {
               Text(
                 value,
                 style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
                   color: color,
                 ),
               ),
@@ -263,15 +313,15 @@ class ProductDetailsPage extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(
-              Icons.check_circle_outline,
-              color: Colors.blue.shade700,
-              size: 24,
-            ),
-            const SizedBox(width: 8),
+            const Icon(Icons.checklist_rounded, color: Colors.blue, size: 22),
+            const SizedBox(width: 10),
             const Text(
               "المواصفات",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: Colors.black87,
+              ),
             ),
           ],
         ),
@@ -283,9 +333,9 @@ class ProductDetailsPage extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withOpacity(0.04),
                 blurRadius: 10,
-                offset: const Offset(0, 2),
+                offset: const Offset(0, 4),
               ),
             ],
           ),
@@ -293,44 +343,49 @@ class ProductDetailsPage extends StatelessWidget {
             children: product.features!.entries.map((entry) {
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 8,
-                      height: 8,
-                      margin: const EdgeInsets.only(top: 6),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade700,
-                        shape: BoxShape.circle,
+                child: Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade50,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: const BoxDecoration(
+                          color: Colors.blue,
+                          shape: BoxShape.circle,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            entry.key,
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.grey.shade600,
-                              fontWeight: FontWeight.w500,
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              entry.key,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            entry.value.toString(),
-                            style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black87,
+                            const SizedBox(height: 3),
+                            Text(
+                              entry.value.toString(),
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             }).toList(),
@@ -351,7 +406,7 @@ class ProductDetailsPage extends StatelessWidget {
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withOpacity(0.08),
                 blurRadius: 20,
                 offset: const Offset(0, -5),
               ),
@@ -364,12 +419,12 @@ class ProductDetailsPage extends StatelessWidget {
                 // اختيار الكمية
                 Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
+                    horizontal: 12,
+                    vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(16),
+                    color: Colors.blue.shade50,
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -384,16 +439,16 @@ class ProductDetailsPage extends StatelessWidget {
                               }
                             : null,
                         icon: Icon(
-                          Icons.remove_circle,
+                          Icons.remove_circle_rounded,
                           color: quantity > 1
-                              ? Colors.red.shade600
-                              : Colors.grey.shade400,
-                          size: 36,
+                              ? Colors.red.shade400
+                              : Colors.grey.shade300,
+                          size: 32,
                         ),
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
+                          horizontal: 20,
                           vertical: 8,
                         ),
                         decoration: BoxDecoration(
@@ -403,8 +458,9 @@ class ProductDetailsPage extends StatelessWidget {
                         child: Text(
                           quantity.toString(),
                           style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.blue,
                           ),
                         ),
                       ),
@@ -417,11 +473,11 @@ class ProductDetailsPage extends StatelessWidget {
                               }
                             : null,
                         icon: Icon(
-                          Icons.add_circle,
+                          Icons.add_circle_rounded,
                           color: quantity < product.stockQty
-                              ? Colors.green.shade600
-                              : Colors.grey.shade400,
-                          size: 36,
+                              ? Colors.blue
+                              : Colors.grey.shade300,
+                          size: 32,
                         ),
                       ),
                     ],
@@ -436,13 +492,13 @@ class ProductDetailsPage extends StatelessWidget {
                     Expanded(
                       flex: 2,
                       child: Container(
-                        padding: const EdgeInsets.all(12),
+                        padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
-                          color: Colors.green.shade50,
+                          color: Colors.blue.shade50,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: Colors.green.shade200,
-                            width: 2,
+                            color: Colors.blue.shade100,
+                            width: 1.5,
                           ),
                         ),
                         child: Column(
@@ -452,17 +508,17 @@ class ProductDetailsPage extends StatelessWidget {
                               "الإجمالي",
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Colors.grey.shade700,
+                                color: Colors.grey.shade600,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               "${((product.priceCents * quantity) / 100).toStringAsFixed(0)} ل.س",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green.shade700,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.blue,
                               ),
                             ),
                           ],
@@ -491,27 +547,19 @@ class ProductDetailsPage extends StatelessWidget {
                                   final result = await orderController
                                       .placeOrder(items: items);
 
-                                 if (result == Staterequest.success) {
+                                  if (result == Staterequest.success) {
                                     Get.snackbar(
                                       "نجاح",
                                       "تم إرسال طلبك بنجاح 🎉",
                                       snackPosition: SnackPosition.BOTTOM,
-                                      backgroundColor: Colors.green,
+                                      backgroundColor: Colors.blue,
                                       colorText: Colors.white,
                                       margin: const EdgeInsets.all(16),
                                       borderRadius: 12,
                                       icon: const Icon(
-                                        Icons.check_circle,
+                                        Icons.check_circle_rounded,
                                         color: Colors.white,
                                       ),
-                                    );
-
-                                    // 🔹 الانتقال إلى صفحة الطلبات بعد ثانيتين
-                                    Future.delayed(
-                                      const Duration(seconds: 2),
-                                      () {
-                                        Get.off(() => OrdersPage());
-                                      },
                                     );
                                   } else {
                                     Get.snackbar(
@@ -523,20 +571,22 @@ class ProductDetailsPage extends StatelessWidget {
                                       margin: const EdgeInsets.all(16),
                                       borderRadius: 12,
                                       icon: const Icon(
-                                        Icons.error,
+                                        Icons.error_rounded,
                                         color: Colors.white,
                                       ),
                                     );
                                   }
-
                                 }
                               : null,
-                          icon: const Icon(Icons.shopping_cart, size: 22),
+                          icon: const Icon(
+                            Icons.shopping_cart_rounded,
+                            size: 20,
+                          ),
                           label: const Text(
                             "اطلب الآن",
                             style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                           style: ElevatedButton.styleFrom(

@@ -140,6 +140,7 @@ class ProductsByCategoryPage extends StatelessWidget {
   }
 
   // بطاقة المنتج
+  // بطاقة المنتج
   Widget _buildProductCard(ProductModel product) {
     return Card(
       elevation: 2,
@@ -149,17 +150,16 @@ class ProductsByCategoryPage extends StatelessWidget {
         onTap: () {
           Get.toNamed(
             AppRoute.productDetails,
-            arguments: {'productId': product.id}, // <--- هنا
+            arguments: {'productId': product.id},
           );
         },
-
         borderRadius: BorderRadius.circular(16),
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // صورة المنتج (إذا عندك feature أو placeholder)
+              // صورة المنتج
               Container(
                 width: 100,
                 height: 100,
@@ -167,11 +167,21 @@ class ProductsByCategoryPage extends StatelessWidget {
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(
-                  Icons.shopping_bag,
-                  size: 50,
-                  color: Colors.grey,
-                ),
+                child: product.imageUrl != null && product.imageUrl!.isNotEmpty
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.network(
+                          product.imageUrl!,
+                          fit: BoxFit.cover,
+                          width: 100,
+                          height: 100,
+                        ),
+                      )
+                    : const Icon(
+                        Icons.shopping_bag,
+                        size: 50,
+                        color: Colors.grey,
+                      ),
               ),
               const SizedBox(width: 12),
 
@@ -190,6 +200,17 @@ class ProductsByCategoryPage extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
+                    const SizedBox(height: 4),
+
+                    // الوصف (إذا موجود)
+                    if (product.description != null &&
+                        product.description!.isNotEmpty)
+                      Text(
+                        product.description!,
+                        style: TextStyle(fontSize: 13, color: Colors.grey[700]),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     const SizedBox(height: 6),
 
                     // SKU
@@ -252,6 +273,7 @@ class ProductsByCategoryPage extends StatelessWidget {
       ),
     );
   }
+
 
   // نافذة الفلترة
   void _showFilterBottomSheet(BuildContext context) async {

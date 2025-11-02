@@ -30,19 +30,16 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
         title: const Text(
           "الرئيسية",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
         ),
         centerTitle: true,
-        elevation: 3,
-        backgroundColor: Colors.blue.shade600,
-        foregroundColor: Colors.white,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
-        ),
+        elevation: 0,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.blue,
       ),
 
       body: SingleChildScrollView(
@@ -50,36 +47,34 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 20),
+
             // 🔹 بطاقة الترحيب
             Container(
-              margin: const EdgeInsets.all(16),
-              padding: const EdgeInsets.all(20),
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.blue.shade400, Colors.blue.shade600],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(20),
+                color: Colors.blue,
+                borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.blue.withOpacity(0.25),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
+                    color: Colors.blue.withOpacity(0.3),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
                   ),
                 ],
               ),
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(
                       Icons.waving_hand_rounded,
-                      size: 32,
+                      size: 28,
                       color: Colors.white,
                     ),
                   ),
@@ -91,15 +86,19 @@ class HomePage extends StatelessWidget {
                         Text(
                           "مرحباً بك!",
                           style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w700,
                             color: Colors.white,
                           ),
                         ),
-                        SizedBox(height: 4),
+                        SizedBox(height: 6),
                         Text(
-                          "اكتشف منتجاتنا وعروضنا المميزة 🎁",
-                          style: TextStyle(fontSize: 14, color: Colors.white70),
+                          "اكتشف منتجاتنا وعروضنا المميزة",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white70,
+                            height: 1.4,
+                          ),
                         ),
                       ],
                     ),
@@ -108,20 +107,23 @@ class HomePage extends StatelessWidget {
               ),
             ),
 
+            const SizedBox(height: 32),
+
             // 🔹 التصنيفات
             _buildSectionHeader(
               title: "التصنيفات",
-              icon: Icons.category_rounded,
-              color: Colors.blue.shade700,
+              icon: Icons.grid_view_rounded,
               onViewAll: () => Get.to(() => CategoriesPage()),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
             SizedBox(
-              height: 130,
+              height: 120,
               child: GetBuilder<CategoryCustomerController>(
                 builder: (controller) {
                   if (controller.isLoading) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(
+                      child: CircularProgressIndicator(color: Colors.blue),
+                    );
                   }
                   if (controller.categories.isEmpty) {
                     return _emptyState(
@@ -131,7 +133,7 @@ class HomePage extends StatelessWidget {
                   }
                   return ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     itemCount: controller.categories.length,
                     itemBuilder: (context, index) {
                       final category = controller.categories[index];
@@ -146,17 +148,16 @@ class HomePage extends StatelessWidget {
                           );
                         },
                         child: Container(
-                          width: 110,
+                          width: 100,
                           margin: const EdgeInsets.only(left: 12),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.grey.shade200),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
+                                color: Colors.black.withOpacity(0.04),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
                               ),
                             ],
                           ),
@@ -164,26 +165,32 @@ class HomePage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
-                                padding: const EdgeInsets.all(14),
+                                padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
                                   color: Colors.blue.shade50,
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
                                   Icons.category_rounded,
-                                  color: Colors.blue.shade700,
-                                  size: 30,
+                                  color: Colors.blue,
+                                  size: 24,
                                 ),
                               ),
                               const SizedBox(height: 10),
-                              Text(
-                                category.name ?? "بدون اسم",
-                                textAlign: TextAlign.center,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                ),
+                                child: Text(
+                                  category.name ?? "بدون اسم",
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black87,
+                                  ),
                                 ),
                               ),
                             ],
@@ -195,21 +202,23 @@ class HomePage extends StatelessWidget {
                 },
               ),
             ),
-            const SizedBox(height: 28),
+
+            const SizedBox(height: 32),
 
             // 🔹 العروض الخاصة
             _buildSectionHeader(
               title: "العروض الخاصة",
               icon: Icons.local_offer_rounded,
-              color: Colors.pink.shade700,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
             SizedBox(
-              height: 200,
+              height: 180,
               child: GetBuilder<OfferCustomerController>(
                 builder: (controller) {
                   if (controller.isLoading) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(
+                      child: CircularProgressIndicator(color: Colors.blue),
+                    );
                   }
                   if (controller.offers.isEmpty) {
                     return _emptyState(
@@ -219,7 +228,7 @@ class HomePage extends StatelessWidget {
                   }
                   return ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     itemCount: controller.offers.length,
                     itemBuilder: (context, index) {
                       final offer = controller.offers[index];
@@ -231,23 +240,16 @@ class HomePage extends StatelessWidget {
                           );
                         },
                         child: Container(
-                          width: 280,
+                          width: 260,
                           margin: const EdgeInsets.only(left: 16),
                           decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Colors.pink.shade400,
-                                Colors.pink.shade600,
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(16),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.pink.withOpacity(0.3),
-                                blurRadius: 12,
-                                offset: const Offset(0, 4),
+                                color: Colors.blue.withOpacity(0.3),
+                                blurRadius: 20,
+                                offset: const Offset(0, 8),
                               ),
                             ],
                           ),
@@ -257,42 +259,66 @@ class HomePage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 6,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.25),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: const Text(
-                                    "عرض خاص 🎉",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 6,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.25),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: const Text(
+                                        "عرض خاص",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    Icon(
+                                      Icons.local_offer_rounded,
+                                      color: Colors.white.withOpacity(0.3),
+                                      size: 24,
+                                    ),
+                                  ],
                                 ),
+                                const SizedBox(height: 12),
                                 Text(
                                   offer.name ?? "بدون عنوان",
                                   style: const TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700,
                                     color: Colors.white,
+                                    height: 1.3,
                                   ),
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                 ),
-                                Text(
-                                  offer.type == "PERCENT"
-                                      ? "خصم ${offer.value}%"
-                                      : "خصم ${offer.value} ل.س",
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white70,
-                                    fontWeight: FontWeight.w600,
+                                const SizedBox(height: 8),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 8,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    offer.type == "PERCENT"
+                                        ? "خصم ${offer.value}%"
+                                        : "خصم ${offer.value} ل.س",
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -305,27 +331,25 @@ class HomePage extends StatelessWidget {
                 },
               ),
             ),
-            const SizedBox(height: 28),
+
+            const SizedBox(height: 32),
 
             // 🔹 بطاقة طلباتي
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: InkWell(
                 onTap: () => Get.to(() => OrdersPage()),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(16),
                 child: Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.purple.shade400, Colors.purple.shade600],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Colors.blue.shade100, width: 1.5),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.purple.withOpacity(0.3),
-                        blurRadius: 12,
+                        color: Colors.blue.withOpacity(0.08),
+                        blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
                     ],
@@ -333,15 +357,15 @@ class HomePage extends StatelessWidget {
                   child: Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(16),
+                          color: Colors.blue.shade50,
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(
                           Icons.receipt_long_rounded,
-                          color: Colors.white,
-                          size: 32,
+                          color: Colors.blue,
+                          size: 28,
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -352,32 +376,34 @@ class HomePage extends StatelessWidget {
                             Text(
                               "طلباتي",
                               style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black87,
                               ),
                             ),
                             SizedBox(height: 4),
                             Text(
-                              "عرض جميع طلباتك السابقة بسهولة",
+                              "عرض جميع طلباتك السابقة",
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.white70,
+                                color: Colors.black54,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      const Icon(
+                      Icon(
                         Icons.arrow_forward_ios_rounded,
-                        color: Colors.white,
-                        size: 22,
+                        color: Colors.blue.shade300,
+                        size: 18,
                       ),
                     ],
                   ),
                 ),
               ),
             ),
+
+            const SizedBox(height: 32),
           ],
         ),
       ),
@@ -388,37 +414,46 @@ class HomePage extends StatelessWidget {
   Widget _buildSectionHeader({
     required String title,
     required IconData icon,
-    required Color color,
     VoidCallback? onViewAll,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
-        mainAxisAlignment: onViewAll != null
-            ? MainAxisAlignment.spaceBetween
-            : MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             children: [
-              Icon(icon, color: color, size: 24),
-              const SizedBox(width: 8),
+              Icon(icon, color: Colors.blue, size: 22),
+              const SizedBox(width: 10),
               Text(
                 title,
                 style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black87,
                 ),
               ),
             ],
           ),
           if (onViewAll != null)
-            TextButton.icon(
+            TextButton(
               onPressed: onViewAll,
-              icon: const Icon(Icons.arrow_forward_ios, size: 14),
-              label: const Text("عرض الكل"),
               style: TextButton.styleFrom(
                 foregroundColor: Colors.blue,
-                textStyle: const TextStyle(fontWeight: FontWeight.bold),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
+              ),
+              child: const Row(
+                children: [
+                  Text(
+                    "عرض الكل",
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                  ),
+                  SizedBox(width: 4),
+                  Icon(Icons.arrow_forward_ios, size: 12),
+                ],
               ),
             ),
         ],
@@ -432,11 +467,15 @@ class HomePage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 60, color: Colors.grey.shade300),
-          const SizedBox(height: 10),
+          Icon(icon, size: 48, color: Colors.grey.shade300),
+          const SizedBox(height: 12),
           Text(
             text,
-            style: TextStyle(color: Colors.grey.shade600, fontSize: 15),
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ],
       ),

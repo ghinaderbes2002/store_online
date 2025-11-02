@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:online_store/core/classes/api_client.dart';
 import 'package:online_store/core/classes/staterequest.dart';
 import 'package:online_store/core/constant/App_link.dart';
@@ -16,25 +18,43 @@ class ProductService {
     int? categoryId,
     int? brandId,
     Map<String, dynamic>? features,
+    String? description,
+    File? imageFile, // بدل imageUrl
   }) async {
     try {
-      final url = '${ServerConfig().serverLink}/owner/products';
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token') ?? '';
 
-      final response = await apiClient.postData(
-        url: url,
-        data: {
-          'name': name,
-          'sku': sku,
-          'priceCents': priceCents,
-          'stockQty': stockQty,
-          'isActive': isActive,
-          'categoryId': categoryId,
-          'brandId': brandId,
-          'features': features,
-        },
-        headers: {'Authorization': 'Bearer $token'},
+      final dio = Dio();
+
+      // تجهيز الـ FormData للـ multipart
+      final formData = FormData.fromMap({
+        'name': name,
+        'sku': sku,
+        'priceCents': priceCents,
+        'stockQty': stockQty,
+        'isActive': isActive,
+        'categoryId': categoryId,
+        'brandId': brandId,
+        'features': features != null ? features : null,
+        'description': description,
+      if (imageFile != null)
+          'image': await MultipartFile.fromFile(
+            imageFile.path,
+            filename: imageFile.path.split('/').last,
+          ),
+
+      });
+
+      final response = await dio.post(
+        '${ServerConfig().serverLink}/owner/products',
+        data: formData,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'multipart/form-data',
+          },
+        ),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -42,10 +62,12 @@ class ProductService {
       }
       return Staterequest.failure;
     } catch (e) {
+      print("❌ Dio createProduct error: $e");
       return Staterequest.failure;
     }
   }
-Future<Staterequest> updateProduct({
+
+  Future<Staterequest> updateProduct({
     required int id,
     String? name,
     String? sku,

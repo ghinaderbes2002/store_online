@@ -55,12 +55,12 @@ class BrandsPage extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.purple.shade50,
+                    color: Colors.blue.shade50,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
                     Icons.add_circle_outline,
-                    color: Colors.purple.shade700,
+                    color: Colors.blue.shade700,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -86,7 +86,7 @@ class BrandsPage extends StatelessWidget {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Colors.purple, width: 2),
+                  borderSide: const BorderSide(color: Colors.blue, width: 2),
                 ),
                 filled: true,
                 fillColor: Colors.grey.shade50,
@@ -136,7 +136,7 @@ class BrandsPage extends StatelessWidget {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
+                  backgroundColor: Colors.blue,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -205,14 +205,14 @@ class BrandsPage extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: brand.isActive
-                    ? Colors.purple.shade50
+                    ? Colors.green.shade50
                     : Colors.grey.shade100,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
                 Icons.business_rounded,
                 color: brand.isActive
-                    ? Colors.purple.shade700
+                    ? Colors.green.shade700
                     : Colors.grey.shade600,
                 size: 24,
               ),

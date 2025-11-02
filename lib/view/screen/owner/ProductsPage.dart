@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:online_store/controllers/owner/category_controller.dart';
 import 'package:online_store/controllers/owner/brand_controller.dart';
 import 'package:online_store/controllers/owner/product_controller.dart';
+import 'package:online_store/model/product_model.dart';
 
 class ProductsPage extends StatefulWidget {
   const ProductsPage({super.key});
@@ -26,6 +27,14 @@ class _ProductsPageState extends State<ProductsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          _showAddProductDialog(context);
+        },
+        icon: const Icon(Icons.add),
+        label: const Text("إضافة منتج"),
+        backgroundColor: Colors.blue,
+      ),
       body: GetBuilder<ProductController>(
         builder: (controller) {
           if (controller.isLoading) {
@@ -34,365 +43,6 @@ class _ProductsPageState extends State<ProductsPage> {
 
           return Column(
             children: [
-              // قسم الإضافة مع ارتفاع محدد
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.5, // نصف الشاشة
-                child: SingleChildScrollView(
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.shade200,
-                          blurRadius: 10,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Form(
-                      key: controller.formState,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: Colors.orange.shade50,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Icon(
-                                  Icons.add_circle_outline,
-                                  color: Colors.orange.shade700,
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              const Text(
-                                "إضافة منتج جديد",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-
-                          // اسم المنتج
-                          TextFormField(
-                            controller: controller.nameController,
-                            decoration: InputDecoration(
-                              labelText: "اسم المنتج",
-                              hintText: "أدخل اسم المنتج",
-                              prefixIcon: const Icon(
-                                Icons.shopping_bag_outlined,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                  color: Colors.grey.shade300,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(
-                                  color: Colors.orange,
-                                  width: 2,
-                                ),
-                              ),
-                              filled: true,
-                              fillColor: Colors.grey.shade50,
-                            ),
-                            validator: (val) =>
-                                val == null || val.isEmpty ? "مطلوب" : null,
-                          ),
-                          const SizedBox(height: 12),
-
-                          // SKU
-                          TextFormField(
-                            controller: controller.skuController,
-                            decoration: InputDecoration(
-                              labelText: "رمز المنتج (SKU)",
-                              hintText: "مثال: PRD-001",
-                              prefixIcon: const Icon(Icons.qr_code_outlined),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                  color: Colors.grey.shade300,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(
-                                  color: Colors.orange,
-                                  width: 2,
-                                ),
-                              ),
-                              filled: true,
-                              fillColor: Colors.grey.shade50,
-                            ),
-                            validator: (val) =>
-                                val == null || val.isEmpty ? "مطلوب" : null,
-                          ),
-                          const SizedBox(height: 12),
-
-                          // السعر والكمية
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextFormField(
-                                  controller: controller.priceController,
-                                  decoration: InputDecoration(
-                                    labelText: "السعر",
-                                    hintText: "0",
-                                    prefixIcon: const Icon(Icons.attach_money),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: BorderSide(
-                                        color: Colors.grey.shade300,
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: const BorderSide(
-                                        color: Colors.orange,
-                                        width: 2,
-                                      ),
-                                    ),
-                                    filled: true,
-                                    fillColor: Colors.grey.shade50,
-                                  ),
-                                  keyboardType: TextInputType.number,
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: TextFormField(
-                                  controller: controller.stockController,
-                                  decoration: InputDecoration(
-                                    labelText: "الكمية",
-                                    hintText: "0",
-                                    prefixIcon: const Icon(
-                                      Icons.inventory_2_outlined,
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: BorderSide(
-                                        color: Colors.grey.shade300,
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: const BorderSide(
-                                        color: Colors.orange,
-                                        width: 2,
-                                      ),
-                                    ),
-                                    filled: true,
-                                    fillColor: Colors.grey.shade50,
-                                  ),
-                                  keyboardType: TextInputType.number,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 12),
-
-                          // قسم الميزات
-                          Text(
-                            "الميزات",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey.shade700,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          TextFormField(
-                            controller: controller.ramController,
-                            decoration: _buildFeatureInputDecoration("RAM"),
-                          ),
-                          const SizedBox(height: 8),
-                          TextFormField(
-                            controller: controller.storageController,
-                            decoration: _buildFeatureInputDecoration("Storage"),
-                          ),
-                          const SizedBox(height: 8),
-                          TextFormField(
-                            controller: controller.colorController,
-                            decoration: _buildFeatureInputDecoration("Color"),
-                          ),
-                          const SizedBox(height: 8),
-                          TextFormField(
-                            controller: controller.displayController,
-                            decoration: _buildFeatureInputDecoration("Display"),
-                          ),
-                          const SizedBox(height: 8),
-                          TextFormField(
-                            controller: controller.batteryController,
-                            decoration: _buildFeatureInputDecoration("Battery"),
-                          ),
-                          const SizedBox(height: 12),
-
-                          // Dropdown والفئة والشركة
-                          GetBuilder<CategoryController>(
-                            builder: (catController) {
-                              if (catController.isLoading) {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              }
-                              return DropdownButtonFormField<int>(
-                                decoration: InputDecoration(
-                                  labelText: "الصنف",
-                                  prefixIcon: const Icon(
-                                    Icons.category_outlined,
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.grey.shade50,
-                                ),
-                                value: controller.categoryId,
-                                items: catController.categories
-                                    .map(
-                                      (cat) => DropdownMenuItem<int>(
-                                        value: cat.id,
-                                        child: Text(cat.name),
-                                      ),
-                                    )
-                                    .toList(),
-                                onChanged: (val) {
-                                  controller.categoryId = val;
-                                  controller.update();
-                                },
-                                validator: (val) =>
-                                    val == null ? "الرجاء اختيار فئة" : null,
-                              );
-                            },
-                          ),
-                          const SizedBox(height: 12),
-
-                          GetBuilder<BrandController>(
-                            builder: (brandCtrl) {
-                              if (brandCtrl.isLoading) {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              }
-                              return DropdownButtonFormField<int>(
-                                decoration: InputDecoration(
-                                  labelText: "الشركة",
-                                  prefixIcon: const Icon(
-                                    Icons.business_outlined,
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.grey.shade50,
-                                ),
-                                value: controller.brandId,
-                                items: brandCtrl.brands
-                                    .map(
-                                      (b) => DropdownMenuItem<int>(
-                                        value: b.id,
-                                        child: Text(b.name),
-                                      ),
-                                    )
-                                    .toList(),
-                                onChanged: (val) {
-                                  controller.brandId = val;
-                                  controller.update();
-                                },
-                                validator: (val) =>
-                                    val == null ? "الرجاء اختيار شركة" : null,
-                              );
-                            },
-                          ),
-                          const SizedBox(height: 12),
-
-                          // Switch للحالة
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade50,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.grey.shade300),
-                            ),
-                            child: SwitchListTile(
-                              value: controller.isActive,
-                              title: const Text(
-                                "حالة المنتج",
-                                style: TextStyle(fontWeight: FontWeight.w500),
-                              ),
-                              subtitle: Text(
-                                controller.isActive ? "نشط" : "غير نشط",
-                                style: TextStyle(
-                                  color: controller.isActive
-                                      ? Colors.green
-                                      : Colors.grey,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              activeColor: Colors.green,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              onChanged: (val) {
-                                controller.isActive = val;
-                                controller.update();
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-
-                          // زر الإضافة
-                          SizedBox(
-                            width: double.infinity,
-                            height: 50,
-                            child: ElevatedButton.icon(
-                              onPressed: controller.createProduct,
-                              icon: const Icon(Icons.add_rounded),
-                              label: const Text(
-                                "إضافة المنتج",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.orange,
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                elevation: 2,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
               // قسم القائمة
               Expanded(
                 child: controller.products.isEmpty
@@ -428,7 +78,7 @@ class _ProductsPageState extends State<ProductsPage> {
                     : ListView.builder(
                         padding: const EdgeInsets.all(16),
                         itemCount: controller.products.length,
-                        itemBuilder: (context, index) {
+                       itemBuilder: (context, index) {
                           final product = controller.products[index];
                           return Container(
                             margin: const EdgeInsets.only(bottom: 12),
@@ -445,26 +95,34 @@ class _ProductsPageState extends State<ProductsPage> {
                               ],
                             ),
                             child: ListTile(
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 12,
-                              ),
-                              leading: Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: product.isActive
-                                      ? Colors.orange.shade50
-                                      : Colors.grey.shade100,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Icon(
-                                  Icons.shopping_bag_rounded,
-                                  color: product.isActive
-                                      ? Colors.orange.shade700
-                                      : Colors.grey.shade600,
-                                  size: 24,
-                                ),
-                              ),
+                              contentPadding: const EdgeInsets.all(12),
+                              leading:
+                                  product.imageUrl != null &&
+                                      product.imageUrl!.isNotEmpty
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: Image.network(
+                                        product.imageUrl!,
+                                        width: 60,
+                                        height: 60,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
+                                  : Container(
+                                      width: 60,
+                                      height: 60,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey.shade200,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Icon(
+                                        Icons.shopping_bag_rounded,
+                                        color: product.isActive
+                                            ? Colors.green.shade700
+                                            : Colors.grey.shade600,
+                                        size: 30,
+                                      ),
+                                    ),
                               title: Text(
                                 product.name,
                                 style: const TextStyle(
@@ -472,63 +130,80 @@ class _ProductsPageState extends State<ProductsPage> {
                                   fontSize: 16,
                                 ),
                               ),
-                              subtitle: Padding(
-                                padding: const EdgeInsets.only(top: 8),
-                                child: Wrap(
-                                  spacing: 8,
-                                  runSpacing: 4,
-                                  children: [
-                                    _buildInfoChip(
-                                      Icons.attach_money,
-                                      "${product.priceCents} سنت",
-                                      Colors.green,
-                                    ),
-                                    _buildInfoChip(
-                                      Icons.inventory_2,
-                                      "الكمية: ${product.stockQty}",
-                                      Colors.purple,
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 4,
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (product.description != null &&
+                                      product.description!.isNotEmpty)
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 4.0),
+                                      child: Text(
+                                        product.description!,
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.grey.shade700,
+                                        ),
                                       ),
-                                      decoration: BoxDecoration(
-                                        color: product.isActive
-                                            ? Colors.green.shade50
-                                            : Colors.grey.shade100,
-                                        borderRadius: BorderRadius.circular(6),
+                                    ),
+                                  const SizedBox(height: 6),
+                                  Wrap(
+                                    spacing: 8,
+                                    runSpacing: 4,
+                                    children: [
+                                      _buildInfoChip(
+                                        Icons.attach_money,
+                                        "${product.priceCents} سنت",
+                                        Colors.green,
                                       ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(
-                                            product.isActive
-                                                ? Icons.check_circle
-                                                : Icons.cancel,
-                                            size: 14,
-                                            color: product.isActive
-                                                ? Colors.green
-                                                : Colors.grey,
+                                      _buildInfoChip(
+                                        Icons.inventory_2,
+                                        "الكمية: ${product.stockQty}",
+                                        Colors.purple,
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 4,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: product.isActive
+                                              ? Colors.green.shade50
+                                              : Colors.grey.shade100,
+                                          borderRadius: BorderRadius.circular(
+                                            6,
                                           ),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            product.isActive
-                                                ? "نشط"
-                                                : "غير نشط",
-                                            style: TextStyle(
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(
+                                              product.isActive
+                                                  ? Icons.check_circle
+                                                  : Icons.cancel,
+                                              size: 14,
                                               color: product.isActive
-                                                  ? Colors.green.shade700
-                                                  : Colors.grey.shade600,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500,
+                                                  ? Colors.green
+                                                  : Colors.grey,
                                             ),
-                                          ),
-                                        ],
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              product.isActive
+                                                  ? "نشط"
+                                                  : "غير نشط",
+                                              style: TextStyle(
+                                                color: product.isActive
+                                                    ? Colors.green.shade700
+                                                    : Colors.grey.shade600,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
+                                    ],
+                                  ),
+                                ],
                               ),
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -544,7 +219,10 @@ class _ProductsPageState extends State<ProductsPage> {
                                         color: Colors.blue,
                                       ),
                                       onPressed: () {
-                                        controller.updateProduct(product);
+                                        _showEditProductDialog(
+                                          context,
+                                          product,
+                                        );
                                       },
                                     ),
                                   ),
@@ -593,6 +271,544 @@ class _ProductsPageState extends State<ProductsPage> {
       ),
       filled: true,
       fillColor: Colors.grey.shade50,
+    );
+  }
+
+  void _showEditProductDialog(BuildContext context, ProductModel product) {
+    final productController = Get.find<ProductController>();
+
+    // ✅ تعبئة الحقول بالبيانات الحالية
+    productController.nameController.text = product.name;
+    productController.skuController.text = product.sku;
+    productController.priceController.text = product.priceCents.toString();
+    productController.stockController.text = product.stockQty.toString();
+    productController.categoryId = product.categoryId;
+    productController.brandId = product.brandId;
+    productController.isActive = product.isActive;
+
+    productController.ramController.text = product.features?['RAM'] ?? '';
+    productController.storageController.text =
+        product.features?['Storage'] ?? '';
+    productController.colorController.text = product.features?['Color'] ?? '';
+    productController.displayController.text =
+        product.features?['Display'] ?? '';
+    productController.batteryController.text =
+        product.features?['Battery'] ?? '';
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Form(
+              key: productController.formState,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.shade50,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          Icons.edit_outlined,
+                          color: Colors.orange.shade700,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      const Text(
+                        "تعديل المنتج",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+
+                  // 🔹 نفس الحقول المستخدمة في الإضافة:
+                  TextFormField(
+                    controller: productController.nameController,
+                    decoration: const InputDecoration(
+                      labelText: "اسم المنتج",
+                      prefixIcon: Icon(Icons.shopping_bag_outlined),
+                    ),
+                    validator: (val) =>
+                        val == null || val.isEmpty ? "مطلوب" : null,
+                  ),
+                  const SizedBox(height: 12),
+
+                  TextFormField(
+                    controller: productController.skuController,
+                    decoration: const InputDecoration(
+                      labelText: "رمز المنتج (SKU)",
+                      prefixIcon: Icon(Icons.qr_code_outlined),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: productController.priceController,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            labelText: "السعر",
+                            prefixIcon: Icon(Icons.attach_money),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: TextFormField(
+                          controller: productController.stockController,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            labelText: "الكمية",
+                            prefixIcon: Icon(Icons.inventory_2_outlined),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+
+                  // ✅ Dropdown الصنف
+                  GetBuilder<CategoryController>(
+                    builder: (catCtrl) {
+                      return DropdownButtonFormField<int>(
+                        value: productController.categoryId,
+                        decoration: const InputDecoration(
+                          labelText: "الصنف",
+                          prefixIcon: Icon(Icons.category_outlined),
+                        ),
+                        items: catCtrl.categories
+                            .map(
+                              (c) => DropdownMenuItem(
+                                value: c.id,
+                                child: Text(c.name),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (val) {
+                          productController.categoryId = val;
+                        },
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 12),
+
+                  // ✅ Dropdown الشركة
+                  GetBuilder<BrandController>(
+                    builder: (brandCtrl) {
+                      return DropdownButtonFormField<int>(
+                        value: productController.brandId,
+                        decoration: const InputDecoration(
+                          labelText: "الشركة",
+                          prefixIcon: Icon(Icons.business_outlined),
+                        ),
+                        items: brandCtrl.brands
+                            .map(
+                              (b) => DropdownMenuItem(
+                                value: b.id,
+                                child: Text(b.name),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (val) {
+                          productController.brandId = val;
+                        },
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 16),
+
+                  // ✅ الحالة
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade50,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: GetBuilder<ProductController>(
+                      builder: (controller) {
+                        return SwitchListTile(
+                          value: controller.isActive,
+                          title: const Text("حالة المنتج"),
+                          subtitle: Text(
+                            controller.isActive ? "نشط" : "غير نشط",
+                            style: TextStyle(
+                              color: controller.isActive
+                                  ? Colors.green
+                                  : Colors.grey,
+                              fontSize: 12,
+                            ),
+                          ),
+                          activeColor: Colors.green,
+                          onChanged: (val) {
+                            controller.isActive = val;
+                            controller.update();
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // ✅ زر التحديث
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: () async {
+                        if (productController.formState.currentState!
+                            .validate()) {
+                          // تحديث القيم في الموديل
+                          final updatedProduct = product.copyWith(
+                            name: productController.nameController.text,
+                            sku: productController.skuController.text,
+                            priceCents:
+                                int.tryParse(
+                                  productController.priceController.text,
+                                ) ??
+                                0,
+                            stockQty:
+                                int.tryParse(
+                                  productController.stockController.text,
+                                ) ??
+                                0,
+                            categoryId: productController.categoryId,
+                            brandId: productController.brandId,
+                            isActive: productController.isActive,
+                            features: {
+                              'RAM': productController.ramController.text,
+                              'Storage':
+                                  productController.storageController.text,
+                              'Color': productController.colorController.text,
+                              'Display':
+                                  productController.displayController.text,
+                              'Battery':
+                                  productController.batteryController.text,
+                            },
+                          );
+
+                          await productController.saveUpdatedProduct(
+                            updatedProduct,
+                          );
+                          Navigator.pop(context);
+                        }
+                      },
+
+                      icon: const Icon(Icons.save),
+                      label: const Text("تحديث"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showAddProductDialog(BuildContext context) {
+    final productController = Get.find<ProductController>();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Form(
+              key: productController.formState,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade50,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          Icons.add_circle_outline,
+                          color: Colors.blue.shade700,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      const Text(
+                        "إضافة منتج جديد",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+
+                  // 🟠 حقول أساسية
+                  TextFormField(
+                    controller: productController.nameController,
+                    decoration: InputDecoration(
+                      labelText: "اسم المنتج",
+                      prefixIcon: const Icon(Icons.shopping_bag_outlined),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    validator: (val) =>
+                        val == null || val.isEmpty ? "مطلوب" : null,
+                  ),
+                  const SizedBox(height: 12),
+
+                  TextFormField(
+                    controller: productController.skuController,
+                    decoration: InputDecoration(
+                      labelText: "رمز المنتج (SKU)",
+                      prefixIcon: const Icon(Icons.qr_code_outlined),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    controller: productController.descriptionController,
+                    decoration: InputDecoration(
+                      labelText: " الوصف ",
+                      prefixIcon: const Icon(Icons.description),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: productController.priceController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: "السعر",
+                            prefixIcon: const Icon(Icons.attach_money),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: TextFormField(
+                          controller: productController.stockController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: "الكمية",
+                            prefixIcon: const Icon(Icons.inventory_2_outlined),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+
+                  // ✅ Dropdown الفئة
+                  GetBuilder<CategoryController>(
+                    builder: (catCtrl) {
+                      return DropdownButtonFormField<int>(
+                        decoration: InputDecoration(
+                          labelText: "الصنف",
+                          prefixIcon: const Icon(Icons.category_outlined),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        items: catCtrl.categories
+                            .map(
+                              (c) => DropdownMenuItem(
+                                value: c.id,
+                                child: Text(c.name),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (val) {
+                          productController.categoryId = val;
+                        },
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 12),
+
+                  // ✅ Dropdown الشركة
+                  GetBuilder<BrandController>(
+                    builder: (brandCtrl) {
+                      return DropdownButtonFormField<int>(
+                        decoration: InputDecoration(
+                          labelText: "الشركة",
+                          prefixIcon: const Icon(Icons.business_outlined),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        items: brandCtrl.brands
+                            .map(
+                              (b) => DropdownMenuItem(
+                                value: b.id,
+                                child: Text(b.name),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (val) {
+                          productController.brandId = val;
+                        },
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 16),
+
+                  // 🧩 الميزات
+                  Text(
+                    "الميزات",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey.shade700,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+
+                  TextFormField(
+                    controller: productController.ramController,
+                    decoration: _buildFeatureInputDecoration("RAM"),
+                  ),
+                  const SizedBox(height: 8),
+
+                  TextFormField(
+                    controller: productController.storageController,
+                    decoration: _buildFeatureInputDecoration("Storage"),
+                  ),
+                  const SizedBox(height: 8),
+
+                  TextFormField(
+                    controller: productController.colorController,
+                    decoration: _buildFeatureInputDecoration("Color"),
+                  ),
+                  const SizedBox(height: 8),
+
+                  TextFormField(
+                    controller: productController.displayController,
+                    decoration: _buildFeatureInputDecoration("Display"),
+                  ),
+                  const SizedBox(height: 8),
+
+                  TextFormField(
+                    controller: productController.batteryController,
+                    decoration: _buildFeatureInputDecoration("Battery"),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // 🟢 حالة المنتج
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade50,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: GetBuilder<ProductController>(
+                      builder: (controller) {
+                        return SwitchListTile(
+                          value: controller.isActive,
+                          title: const Text(
+                            "حالة المنتج",
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                          subtitle: Text(
+                            controller.isActive ? "نشط" : "غير نشط",
+                            style: TextStyle(
+                              color: controller.isActive
+                                  ? Colors.green
+                                  : Colors.grey,
+                              fontSize: 12,
+                            ),
+                          ),
+                          activeColor: Colors.green,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          onChanged: (val) {
+                            controller.isActive = val;
+                            controller.update();
+                          },
+                        );
+                      },
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  ElevatedButton(
+                    onPressed: productController.pickImage,
+                    child: const Text("اختر صورة"),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // 🔘 زر الإضافة
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: () async {
+                        productController.createProduct();
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(Icons.add),
+                      label: const Text("إضافة"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 

@@ -76,31 +76,38 @@ class BrandController extends GetxController {
   }
 
   // تعديل ماركة
-  void updateBrand(BrandModel brand) async {
+ void updateBrand(BrandModel brand) async {
     String newName = brand.name;
     bool newStatus = brand.isActive;
 
     await Get.defaultDialog(
       title: "تعديل الماركة",
-      content: Column(
-        children: [
-          TextFormField(
-            initialValue: newName,
-            decoration: const InputDecoration(labelText: "اسم الماركة"),
-            onChanged: (val) => newName = val,
-          ),
-          const SizedBox(height: 10),
-          SwitchListTile(
-            title: const Text("نشط"),
-            value: newStatus,
-            onChanged: (val) => newStatus = val,
-          ),
-        ],
+      content: StatefulBuilder(
+        builder: (context, setState) {
+          return Column(
+            children: [
+              TextFormField(
+                initialValue: newName,
+                decoration: const InputDecoration(labelText: "اسم الماركة"),
+                onChanged: (val) => newName = val,
+              ),
+              const SizedBox(height: 10),
+              SwitchListTile(
+                title: const Text("نشط"),
+                value: newStatus,
+                onChanged: (val) {
+                  setState(() => newStatus = val); // ✅ بيعمل تحديث فوري للسويتش
+                },
+              ),
+            ],
+          );
+        },
       ),
       textConfirm: "تحديث",
       textCancel: "إلغاء",
       onConfirm: () async {
         Get.back();
+
         if (newName.trim().isEmpty) {
           Get.snackbar("خطأ", "الاسم لا يمكن أن يكون فارغًا");
           return;
@@ -119,9 +126,9 @@ class BrandController extends GetxController {
           brand.name = newName.trim();
           brand.isActive = newStatus;
           update();
-          Get.snackbar("تم", "تم تحديث الماركة بنجاح 🎉");
+          Get.snackbar("تم ✅", "تم تحديث الماركة بنجاح 🎉");
         } else {
-          Get.snackbar("فشل", "تعذر تحديث الماركة. حاول مرة أخرى.");
+          Get.snackbar("فشل ❌", "تعذر تحديث الماركة. حاول مرة أخرى.");
         }
 
         isLoading = false;

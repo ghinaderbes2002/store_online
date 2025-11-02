@@ -21,6 +21,9 @@ class OfferController extends GetxController {
   List<int> productIds = [];
   List<int> categoryIds = [];
 
+
+
+
   @override
   void onInit() {
     fetchOffers();

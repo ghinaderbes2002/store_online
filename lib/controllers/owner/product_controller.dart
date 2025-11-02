@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:online_store/core/classes/staterequest.dart';
 import 'package:online_store/core/services/owner/product_service.dart';
 import 'package:online_store/model/product_model.dart';
@@ -21,10 +24,19 @@ class ProductController extends GetxController {
   TextEditingController colorController = TextEditingController();
   TextEditingController displayController = TextEditingController();
   TextEditingController batteryController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController imageUrlController = TextEditingController();
+
+  File? pickedImage;
+
+
 
   bool isActive = true;
   int? categoryId;
   int? brandId;
+
+
+
 
   // جلب المنتجات عند بدء الصفحة
   void fetchProducts() async {
@@ -34,6 +46,48 @@ class ProductController extends GetxController {
     isLoading = false;
     update();
   }
+
+Future<void> pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      pickedImage = File(pickedFile.path);
+      update(); // لتحديث الـ UI
+    } else {
+      print("No image selected.");
+    }
+  }
+
+
+Future<void> saveUpdatedProduct(ProductModel product) async {
+    try {
+      isLoading = true;
+      update();
+
+      final result = await productService.updateProduct(
+        id: product.id,
+        name: product.name,
+        priceCents: product.priceCents,
+        stockQty: product.stockQty,
+        isActive: product.isActive,
+      );
+
+      if (result == Staterequest.success) {
+        Get.snackbar("تم", "تم تحديث المنتج بنجاح 🎉");
+        fetchProducts(); // لتحديث القائمة بعد الحفظ
+      } else {
+        Get.snackbar("خطأ", "فشل تحديث المنتج");
+      }
+    } catch (e) {
+      print("❌ Error updating product: $e");
+      Get.snackbar("خطأ", "حدث خطأ أثناء التحديث");
+    } finally {
+      isLoading = false;
+      update();
+    }
+  }
+
 
   void createProduct() async {
     if (!formState.currentState!.validate()) return;
@@ -49,20 +103,39 @@ class ProductController extends GetxController {
       isActive: isActive,
       categoryId: categoryId,
       brandId: brandId,
+      features: {
+        'ram': ramController.text,
+        'storage': storageController.text,
+        'color': colorController.text,
+        'display': displayController.text,
+        'battery': batteryController.text,
+      },
+      description: descriptionController.text,
+      imageFile: pickedImage, // هنا نرسل الملف
     );
 
     if (result == Staterequest.success) {
+      // مسح البيانات بعد الحفظ
       nameController.clear();
       skuController.clear();
       priceController.clear();
       stockController.clear();
+      ramController.clear();
+      storageController.clear();
+      colorController.clear();
+      displayController.clear();
+      batteryController.clear();
+      descriptionController.clear();
+      pickedImage = null; // إعادة الصورة للصفر
       isActive = true;
-      fetchProducts();
+
+      fetchProducts(); // تحديث القائمة
     }
 
     isLoading = false;
     update();
   }
+
 
   void updateProduct(ProductModel product) async {
     String newName = product.name;

@@ -57,40 +57,37 @@ class CategoryController extends GetxController {
 
     await Get.defaultDialog(
       title: "تعديل التصنيف",
-      content: Column(
-        children: [
-          // تعديل الاسم
-          TextFormField(
-            initialValue: newName,
-            decoration: const InputDecoration(labelText: "اسم التصنيف"),
-            onChanged: (val) {
-              newName = val;
-            },
-          ),
-          const SizedBox(height: 10),
-          // تعديل الحالة
-          SwitchListTile(
-            title: const Text("نشط"),
-            value: newStatus,
-            onChanged: (val) {
-              newStatus = val;
-            },
-          ),
-        ],
+      content: StatefulBuilder(
+        builder: (context, setState) {
+          return Column(
+            children: [
+              TextFormField(
+                initialValue: newName,
+                decoration: const InputDecoration(labelText: "اسم التصنيف"),
+                onChanged: (val) => newName = val,
+              ),
+              const SizedBox(height: 10),
+              SwitchListTile(
+                title: const Text("نشط"),
+                value: newStatus,
+                onChanged: (val) {
+                  setState(() => newStatus = val);
+                },
+              ),
+            ],
+          );
+        },
       ),
       textConfirm: "تحديث",
       textCancel: "إلغاء",
       onConfirm: () async {
-        // غلق الـ Dialog
         Get.back();
 
-        // تحقق من الاسم
         if (newName.trim().isEmpty) {
           Get.snackbar("خطأ", "الاسم لا يمكن أن يكون فارغًا");
           return;
         }
 
-        // إرسال البيانات للـ API
         isLoading = true;
         update();
 
@@ -101,7 +98,6 @@ class CategoryController extends GetxController {
         );
 
         if (result == Staterequest.success) {
-          // تحديث القائمة محلياً
           cat.name = newName.trim();
           cat.isActive = newStatus;
           update();
@@ -114,6 +110,7 @@ class CategoryController extends GetxController {
         update();
       },
     );
+
   }
 
   Future<void> deleteCategory(CategoryModel cat) async {

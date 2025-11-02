@@ -216,17 +216,28 @@ class _DashboardPageState extends State<DashboardPage> {
                   middleText: "هل تريد تسجيل الخروج؟",
                   confirm: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
+                      backgroundColor: Colors.red, // 🔴 خلفية الزر
+                      foregroundColor: Colors.white, // 🤍 لون النص
                     ),
                     onPressed: () {
                       final controller = Get.put(LoginControllerImp());
-
                       controller.logout();
                     },
-                    child: const Text("نعم"),
+                    child: const Text(
+                      "نعم",
+                      style: TextStyle(
+                        fontWeight:
+                            FontWeight.bold, // اختياري - يخلي الكلمة أوضح
+                      ),
+                    ),
                   ),
+
                   cancel: TextButton(
                     onPressed: () => Get.back(),
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.white, // ✅ النص أبيض
+                      backgroundColor: Colors.grey, // خلفية غامقة
+                    ),
                     child: const Text("إلغاء"),
                   ),
                 );

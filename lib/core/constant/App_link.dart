@@ -7,7 +7,7 @@ class ServerConfig {
   ServerConfig._internal();
 
   static const String _key = "server_link";
-  String _serverLink = "http://192.168.126.196:3000";
+  String _serverLink = "http://192.168.0.8:3000";
   String get serverLink => _serverLink;
 
   Future<void> loadServerLink() async {
