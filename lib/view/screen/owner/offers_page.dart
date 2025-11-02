@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:online_store/controllers/owner/offer_controller.dart';
 import 'package:online_store/controllers/owner/product_controller.dart';
 import 'package:online_store/model/offer_model.dart';
+import 'package:online_store/model/product_model.dart';
 
 class OffersPage extends StatelessWidget {
   final OfferController controller = Get.put(OfferController());
@@ -254,9 +255,29 @@ class OffersPage extends StatelessWidget {
                                         _buildInfoRow(
                                           icon: Icons.shopping_bag_outlined,
                                           label: "منتجات مستهدفة",
-                                          value: offer.productTargets.join(
-                                            ', ',
-                                          ),
+                                          value: offer.productTargets
+                                              .map((p) {
+                                                final product =
+                                                    productController.products
+                                                        .firstWhere(
+                                                          (prod) =>
+                                                              prod.id ==
+                                                              p.productId,
+                                                          orElse: () =>
+                                                              ProductModel(
+                                                                id: 0,
+                                                                name:
+                                                                    'غير معروف',
+                                                                sku: '',
+                                                                priceCents: 0,
+                                                                stockQty: 0,
+                                                                isActive: false,
+                                                              ),
+                                                        );
+                                                return product.name;
+                                              })
+                                              .join(', '),
+
                                           color: Colors.orange,
                                         ),
                                       if (offer.productTargets.isNotEmpty)
