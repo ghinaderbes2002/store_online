@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:online_store/model/offer_model.dart';
+import 'package:online_store/view/screen/customer/FullImagePage.dart';
 
 class OfferDetailsPage extends StatelessWidget {
   OfferDetailsPage({super.key});
@@ -272,7 +273,7 @@ class OfferDetailsPage extends StatelessWidget {
                         final product = target.product;
                         if (product == null) return const SizedBox.shrink();
 
-                      // داخل map على offer.productTargets
+                        // داخل map على offer.productTargets
                         return Container(
                           margin: const EdgeInsets.only(bottom: 16),
                           decoration: BoxDecoration(
@@ -304,13 +305,25 @@ class OfferDetailsPage extends StatelessWidget {
                                     // صورة المنتج
                                     if (product.imageUrl != null &&
                                         product.imageUrl!.isNotEmpty)
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(12),
-                                        child: Image.network(
-                                          product.imageUrl!,
-                                          width: double.infinity,
-                                          height: 150,
-                                          fit: BoxFit.cover,
+                                      GestureDetector(
+                                        onTap: () {
+                                          // لما تضغط على الصورة تفتح صفحة جديدة
+                                          Get.to(
+                                            () => FullImagePage(
+                                              imageUrl: product.imageUrl!,
+                                            ),
+                                          );
+                                        },
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                          child: Image.network(
+                                            product.imageUrl!,
+                                            width: double.infinity,
+                                            height: 150,
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       )
                                     else
@@ -329,6 +342,7 @@ class OfferDetailsPage extends StatelessWidget {
                                           color: Colors.blue,
                                         ),
                                       ),
+
                                     const SizedBox(height: 12),
 
                                     // اسم المنتج
@@ -396,7 +410,6 @@ class OfferDetailsPage extends StatelessWidget {
                             ],
                           ),
                         );
-                        
                       }).toList(),
                     ] else
                       Center(

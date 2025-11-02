@@ -1,9 +1,9 @@
-
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:online_store/model/order_item_model.dart';
 import 'package:online_store/model/order_model.dart';
+import 'package:online_store/view/screen/customer/FullImagePage.dart';
 
 class OrderDetailsPage extends StatelessWidget {
   final OrderModel order;
@@ -257,8 +257,6 @@ class OrderDetailsPage extends StatelessWidget {
                 ...order.items.map((item) => _buildProductCard(item)).toList(),
 
                 const SizedBox(height: 20),
-
-               
               ],
             ),
           ),
@@ -266,254 +264,261 @@ class OrderDetailsPage extends StatelessWidget {
       ),
     );
   }
-Widget _buildProductCard(OrderItemModel item) {
-  return Container(
-    margin: const EdgeInsets.only(bottom: 12),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.04),
-          blurRadius: 10,
-          offset: const Offset(0, 4),
-        ),
-      ],
-    ),
-    child: Column(
-      children: [
-        // --- رأس الكرت (الصورة + الاسم + الوصف)
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.blue.shade50,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
-            ),
+
+  Widget _buildProductCard(OrderItemModel item) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // صورة المنتج
-              if (item.product?.imageUrl != null &&
-                  item.product!.imageUrl!.isNotEmpty)
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.network(
-                    item.product!.imageUrl!,
+        ],
+      ),
+      child: Column(
+        children: [
+          // --- رأس الكرت (الصورة + الاسم + الوصف)
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.blue.shade50,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // صورة المنتج
+                if (item.product?.imageUrl != null &&
+                    item.product!.imageUrl!.isNotEmpty)
+                  GestureDetector(
+                    onTap: () {
+                      // فتح الصورة في صفحة جديدة
+                      Get.to(
+                        () => FullImagePage(imageUrl: item.product!.imageUrl!),
+                      );
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.network(
+                        item.product!.imageUrl!,
+                        width: double.infinity,
+                        height: 160,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  )
+                else
+                  Container(
                     width: double.infinity,
                     height: 160,
-                    fit: BoxFit.cover,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.3),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      Icons.inventory_2_rounded,
+                      size: 60,
+                      color: Colors.blue,
+                    ),
                   ),
-                )
-              else
+
+                const SizedBox(height: 12),
+
+                // اسم المنتج
+                Text(
+                  item.nameSnapshot,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                    color: Colors.black87,
+                  ),
+                ),
+
+                const SizedBox(height: 6),
+
+                // وصف المنتج
+                if (item.product?.description != null &&
+                    item.product!.description!.isNotEmpty)
+                  Text(
+                    item.product!.description!,
+                    style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
+                  ),
+              ],
+            ),
+          ),
+
+          // --- تفاصيل المنتج (نفسها يلي عندك)
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                // SKU
                 Container(
-                  width: double.infinity,
-                  height: 160,
+                  padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.3),
+                    color: Colors.blue.shade50,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(
-                    Icons.inventory_2_rounded,
-                    size: 60,
-                    color: Colors.blue,
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.qr_code_2_rounded,
+                        size: 20,
+                        color: Colors.blue,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "رمز المنتج",
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(height: 3),
+                            Text(
+                              item.skuSnapshot,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+                const SizedBox(height: 12),
 
-              const SizedBox(height: 12),
-
-              // اسم المنتج
-              Text(
-                item.nameSnapshot,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16,
-                  color: Colors.black87,
-                ),
-              ),
-
-              const SizedBox(height: 6),
-
-              // وصف المنتج
-              if (item.product?.description != null &&
-                  item.product!.description!.isNotEmpty)
-                Text(
-                  item.product!.description!,
-                  style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
-                ),
-            ],
-          ),
-        ),
-
-        // --- تفاصيل المنتج (نفسها يلي عندك)
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              // SKU
-              Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade50,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
+                // السعر والكمية
+                Row(
                   children: [
-                    const Icon(
-                      Icons.qr_code_2_rounded,
-                      size: 20,
-                      color: Colors.blue,
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Icon(
+                              Icons.attach_money,
+                              size: 20,
+                              color: Colors.blue,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              "سعر الوحدة",
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              "${(item.unitPriceCents / 100).toStringAsFixed(0)} ل.س",
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "رمز المنتج",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey.shade600,
-                              fontWeight: FontWeight.w500,
+                      child: Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Icon(
+                              Icons.numbers_rounded,
+                              size: 20,
+                              color: Colors.blue,
                             ),
-                          ),
-                          const SizedBox(height: 3),
-                          Text(
-                            item.skuSnapshot,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w600,
+                            const SizedBox(height: 8),
+                            Text(
+                              "الكمية",
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 4),
+                            Text(
+                              "${item.qty} قطعة",
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 12),
+                const SizedBox(height: 12),
 
-              // السعر والكمية
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade50,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Icon(
-                            Icons.attach_money,
-                            size: 20,
-                            color: Colors.blue,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            "سعر الوحدة",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey.shade600,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            "${(item.unitPriceCents / 100).toStringAsFixed(0)} ل.س",
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                // الإجمالي
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade50,
-                        borderRadius: BorderRadius.circular(12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "الإجمالي",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Icon(
-                            Icons.numbers_rounded,
-                            size: 20,
-                            color: Colors.blue,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            "الكمية",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey.shade600,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            "${item.qty} قطعة",
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
+                      Text(
+                        "${(item.lineTotalCents / 100).toStringAsFixed(0)} ل.س",
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
-              const SizedBox(height: 12),
-
-              // الإجمالي
-              Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(12),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      "الإجمالي",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Text(
-                      "${(item.lineTotalCents / 100).toStringAsFixed(0)} ل.س",
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
-    ),
-  );
-}
-
-
+        ],
+      ),
+    );
+  }
 }
