@@ -1,3 +1,5 @@
+import 'package:online_store/model/product_model.dart';
+
 class OrderItemModel {
   final int id;
   final int orderId;
@@ -8,6 +10,9 @@ class OrderItemModel {
   final int qty;
   final int lineTotalCents;
 
+  // نضيف كائن المنتج المرتبط
+  final ProductModel? product;
+
   OrderItemModel({
     required this.id,
     required this.orderId,
@@ -17,9 +22,10 @@ class OrderItemModel {
     required this.unitPriceCents,
     required this.qty,
     required this.lineTotalCents,
+    this.product,
   });
 
-factory OrderItemModel.fromJson(Map<String, dynamic> json) {
+  factory OrderItemModel.fromJson(Map<String, dynamic> json) {
     return OrderItemModel(
       id: int.parse(json['id'].toString()),
       orderId: int.parse(json['orderId'].toString()),
@@ -31,9 +37,13 @@ factory OrderItemModel.fromJson(Map<String, dynamic> json) {
       qty: int.tryParse(json['qty']?.toString() ?? '0') ?? 0,
       lineTotalCents:
           int.tryParse(json['lineTotalCents']?.toString() ?? '0') ?? 0,
+
+      // هون نقرأ بيانات المنتج لو موجودة
+      product: json['product'] != null
+          ? ProductModel.fromJson(json['product'])
+          : null,
     );
   }
-
 
   Map<String, dynamic> toJson() => {
     'id': id,
@@ -44,5 +54,6 @@ factory OrderItemModel.fromJson(Map<String, dynamic> json) {
     'unitPriceCents': unitPriceCents,
     'qty': qty,
     'lineTotalCents': lineTotalCents,
+    'product': product?.toJson(),
   };
 }
