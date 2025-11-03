@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:online_store/core/constant/App_link.dart';
 import 'package:online_store/model/offer_model.dart';
 import 'package:online_store/view/screen/customer/FullImagePage.dart';
 
@@ -319,7 +320,7 @@ class OfferDetailsPage extends StatelessWidget {
                                             12,
                                           ),
                                           child: Image.network(
-                                            product.imageUrl!,
+                                            "${ServerConfig().serverLink}${product.imageUrl!}", // دمج السيرفر مع المسار
                                             width: double.infinity,
                                             height: 150,
                                             fit: BoxFit.cover,

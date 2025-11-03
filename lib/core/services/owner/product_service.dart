@@ -67,7 +67,7 @@ class ProductService {
     }
   }
 
-  Future<Staterequest> updateProduct({
+Future<Staterequest> updateProduct({
     required int id,
     String? name,
     String? sku,
@@ -76,36 +76,68 @@ class ProductService {
     bool? isActive,
     int? categoryId,
     int? brandId,
+    String? description,
     Map<String, dynamic>? features,
+    File? imageFile, // لو الصورة من الموبايل
   }) async {
     try {
       final url = '${ServerConfig().serverLink}/owner/products/$id';
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token') ?? '';
 
-      final Map<String, dynamic> data = {};
-      if (name != null) data['name'] = name;
-      if (sku != null) data['sku'] = sku;
-      if (priceCents != null) data['priceCents'] = priceCents;
-      if (stockQty != null) data['stockQty'] = stockQty;
-      if (isActive != null) data['isActive'] = isActive;
-      if (categoryId != null) data['categoryId'] = categoryId;
-      if (brandId != null) data['brandId'] = brandId;
-      if (features != null) data['features'] = features;
+      final dio = Dio();
 
-      final response = await apiClient.patchData(
-        url: url,
-        data: data,
-        headers: {'Authorization': 'Bearer $token'},
+      final formData = FormData();
+
+      if (name != null) formData.fields.add(MapEntry('name', name));
+      if (sku != null) formData.fields.add(MapEntry('sku', sku));
+      if (priceCents != null)
+        formData.fields.add(MapEntry('priceCents', priceCents.toString()));
+      if (stockQty != null)
+        formData.fields.add(MapEntry('stockQty', stockQty.toString()));
+      if (isActive != null)
+        formData.fields.add(MapEntry('isActive', isActive.toString()));
+      if (categoryId != null)
+        formData.fields.add(MapEntry('categoryId', categoryId.toString()));
+      if (brandId != null)
+        formData.fields.add(MapEntry('brandId', brandId.toString()));
+      if (description != null)
+        formData.fields.add(MapEntry('description', description));
+      if (features != null)
+        formData.fields.add(MapEntry('features', features.toString()));
+
+      if (imageFile != null) {
+        formData.files.add(
+          MapEntry(
+            'image',
+            await MultipartFile.fromFile(
+              imageFile.path,
+              filename: imageFile.path.split('/').last,
+            ),
+          ),
+        );
+      }
+
+      final response = await dio.patch(
+        url,
+        data: formData,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'multipart/form-data',
+          },
+        ),
       );
 
       return response.statusCode == 200
           ? Staterequest.success
           : Staterequest.failure;
     } catch (e) {
+      print("❌ Dio updateProduct error: $e");
       return Staterequest.failure;
     }
   }
+
 
   Future<Staterequest> deleteProduct(int id) async {
     try {

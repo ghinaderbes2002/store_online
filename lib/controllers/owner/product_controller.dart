@@ -67,15 +67,27 @@ Future<void> saveUpdatedProduct(ProductModel product) async {
 
       final result = await productService.updateProduct(
         id: product.id,
-        name: product.name,
-        priceCents: product.priceCents,
-        stockQty: product.stockQty,
-        isActive: product.isActive,
+        name: nameController.text,
+        sku: skuController.text,
+        priceCents: int.tryParse(priceController.text) ?? 0,
+        stockQty: int.tryParse(stockController.text) ?? 0,
+        isActive: isActive,
+        categoryId: categoryId,
+        brandId: brandId,
+        description: descriptionController.text,
+        features: {
+          'ram': ramController.text,
+          'storage': storageController.text,
+          'color': colorController.text,
+          'display': displayController.text,
+          'battery': batteryController.text,
+        },
+        imageFile: pickedImage, // الصورة من الموبايل
       );
 
       if (result == Staterequest.success) {
         Get.snackbar("تم", "تم تحديث المنتج بنجاح 🎉");
-        fetchProducts(); // لتحديث القائمة بعد الحفظ
+        fetchProducts();
       } else {
         Get.snackbar("خطأ", "فشل تحديث المنتج");
       }
@@ -87,6 +99,7 @@ Future<void> saveUpdatedProduct(ProductModel product) async {
       update();
     }
   }
+
 
 
   void createProduct() async {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:online_store/controllers/customer/product_customer_controller.dart';
+import 'package:online_store/core/constant/App_link.dart';
 import 'package:online_store/core/constant/App_routes.dart';
 import 'package:online_store/model/product_model.dart';
 import 'package:online_store/view/screen/customer/compare_page.dart';
@@ -171,7 +172,7 @@ class ProductsByCategoryPage extends StatelessWidget {
                     ? ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: Image.network(
-                          product.imageUrl!,
+                          "${ServerConfig().serverLink}${product.imageUrl!}", // دمج السيرفر مع المسار
                           fit: BoxFit.cover,
                           width: 100,
                           height: 100,

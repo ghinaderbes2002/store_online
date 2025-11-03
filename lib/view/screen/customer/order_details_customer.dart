@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart' show DateFormat;
+import 'package:online_store/core/constant/App_link.dart';
 import 'package:online_store/model/order_item_model.dart';
 import 'package:online_store/model/order_model.dart';
 import 'package:online_store/view/screen/customer/FullImagePage.dart';
@@ -307,7 +308,8 @@ class OrderDetailsPage extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
                       child: Image.network(
-                        item.product!.imageUrl!,
+                        "${ServerConfig().serverLink}${item.product!.imageUrl!}", // دمج السيرفر مع المسار
+
                         width: double.infinity,
                         height: 160,
                         fit: BoxFit.cover,

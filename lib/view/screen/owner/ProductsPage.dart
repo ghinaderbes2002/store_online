@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:online_store/controllers/owner/category_controller.dart';
 import 'package:online_store/controllers/owner/brand_controller.dart';
 import 'package:online_store/controllers/owner/product_controller.dart';
+import 'package:online_store/core/constant/App_link.dart';
 import 'package:online_store/model/product_model.dart';
 
 class ProductsPage extends StatefulWidget {
@@ -78,7 +79,7 @@ class _ProductsPageState extends State<ProductsPage> {
                     : ListView.builder(
                         padding: const EdgeInsets.all(16),
                         itemCount: controller.products.length,
-                       itemBuilder: (context, index) {
+                        itemBuilder: (context, index) {
                           final product = controller.products[index];
                           return Container(
                             margin: const EdgeInsets.only(bottom: 12),
@@ -102,7 +103,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                   ? ClipRRect(
                                       borderRadius: BorderRadius.circular(8),
                                       child: Image.network(
-                                        product.imageUrl!,
+                                        "${ServerConfig().serverLink}${product.imageUrl!}", // دمج السيرفر مع المسار
                                         width: 60,
                                         height: 60,
                                         fit: BoxFit.cover,
@@ -274,10 +275,10 @@ class _ProductsPageState extends State<ProductsPage> {
     );
   }
 
-  void _showEditProductDialog(BuildContext context, ProductModel product) {
+ void _showEditProductDialog(BuildContext context, ProductModel product) {
     final productController = Get.find<ProductController>();
 
-    // ✅ تعبئة الحقول بالبيانات الحالية
+    // --- تعبئة القيم الحالية ---
     productController.nameController.text = product.name;
     productController.skuController.text = product.sku;
     productController.priceController.text = product.priceCents.toString();
@@ -285,15 +286,18 @@ class _ProductsPageState extends State<ProductsPage> {
     productController.categoryId = product.categoryId;
     productController.brandId = product.brandId;
     productController.isActive = product.isActive;
+    productController.descriptionController.text = product.description ?? '';
 
-    productController.ramController.text = product.features?['RAM'] ?? '';
+    productController.ramController.text = product.features?['ram'] ?? '';
     productController.storageController.text =
-        product.features?['Storage'] ?? '';
-    productController.colorController.text = product.features?['Color'] ?? '';
+        product.features?['storage'] ?? '';
+    productController.colorController.text = product.features?['color'] ?? '';
     productController.displayController.text =
-        product.features?['Display'] ?? '';
+        product.features?['display'] ?? '';
     productController.batteryController.text =
-        product.features?['Battery'] ?? '';
+        product.features?['battery'] ?? '';
+
+    productController.pickedImage = null;
 
     showDialog(
       context: context,
@@ -307,65 +311,68 @@ class _ProductsPageState extends State<ProductsPage> {
             child: Form(
               key: productController.formState,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.orange.shade50,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(
-                          Icons.edit_outlined,
-                          color: Colors.orange.shade700,
-                        ),
+                  // --- صورة المنتج ---
+                  Center(
+                    child: GestureDetector(
+                      onTap: () async => await productController.pickImage(),
+                      child: GetBuilder<ProductController>(
+                        builder: (controller) {
+                          return Container(
+                            width: 150,
+                            height: 150,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.grey.shade300),
+                            ),
+                            child: controller.pickedImage != null
+                                ? Image.file(
+                                    controller.pickedImage!,
+                                    fit: BoxFit.cover,
+                                  )
+                                : product.imageUrl != null
+                                ? Image.network(
+                                    "${ServerConfig().serverLink}${product.imageUrl!}",
+                                    fit: BoxFit.cover,
+                                  )
+                                : const Icon(
+                                    Icons.image,
+                                    size: 50,
+                                    color: Colors.grey,
+                                  ),
+                          );
+                        },
                       ),
-                      const SizedBox(width: 12),
-                      const Text(
-                        "تعديل المنتج",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                   const SizedBox(height: 16),
 
-                  // 🔹 نفس الحقول المستخدمة في الإضافة:
+                  // --- الاسم و SKU ---
                   TextFormField(
                     controller: productController.nameController,
-                    decoration: const InputDecoration(
-                      labelText: "اسم المنتج",
-                      prefixIcon: Icon(Icons.shopping_bag_outlined),
-                    ),
+                    decoration: const InputDecoration(labelText: "اسم المنتج"),
                     validator: (val) =>
                         val == null || val.isEmpty ? "مطلوب" : null,
                   ),
                   const SizedBox(height: 12),
-
                   TextFormField(
                     controller: productController.skuController,
                     decoration: const InputDecoration(
                       labelText: "رمز المنتج (SKU)",
-                      prefixIcon: Icon(Icons.qr_code_outlined),
                     ),
                   ),
                   const SizedBox(height: 12),
 
+                  // --- السعر والكمية ---
                   Row(
                     children: [
                       Expanded(
                         child: TextFormField(
                           controller: productController.priceController,
                           keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            labelText: "السعر",
-                            prefixIcon: Icon(Icons.attach_money),
-                          ),
+                          decoration: const InputDecoration(labelText: "السعر"),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -375,7 +382,6 @@ class _ProductsPageState extends State<ProductsPage> {
                           keyboardType: TextInputType.number,
                           decoration: const InputDecoration(
                             labelText: "الكمية",
-                            prefixIcon: Icon(Icons.inventory_2_outlined),
                           ),
                         ),
                       ),
@@ -383,96 +389,61 @@ class _ProductsPageState extends State<ProductsPage> {
                   ),
                   const SizedBox(height: 12),
 
-                  // ✅ Dropdown الصنف
-                  GetBuilder<CategoryController>(
-                    builder: (catCtrl) {
-                      return DropdownButtonFormField<int>(
-                        value: productController.categoryId,
-                        decoration: const InputDecoration(
-                          labelText: "الصنف",
-                          prefixIcon: Icon(Icons.category_outlined),
-                        ),
-                        items: catCtrl.categories
-                            .map(
-                              (c) => DropdownMenuItem(
-                                value: c.id,
-                                child: Text(c.name),
-                              ),
-                            )
-                            .toList(),
+                  // --- الحالة ---
+                  GetBuilder<ProductController>(
+                    builder: (controller) {
+                      return SwitchListTile(
+                        title: const Text("حالة المنتج"),
+                        subtitle: Text(controller.isActive ? "نشط" : "غير نشط"),
+                        value: controller.isActive,
                         onChanged: (val) {
-                          productController.categoryId = val;
+                          controller.isActive = val;
+                          controller.update();
                         },
                       );
                     },
                   ),
                   const SizedBox(height: 12),
 
-                  // ✅ Dropdown الشركة
-                  GetBuilder<BrandController>(
-                    builder: (brandCtrl) {
-                      return DropdownButtonFormField<int>(
-                        value: productController.brandId,
-                        decoration: const InputDecoration(
-                          labelText: "الشركة",
-                          prefixIcon: Icon(Icons.business_outlined),
-                        ),
-                        items: brandCtrl.brands
-                            .map(
-                              (b) => DropdownMenuItem(
-                                value: b.id,
-                                child: Text(b.name),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (val) {
-                          productController.brandId = val;
-                        },
-                      );
-                    },
+                  // --- المواصفات ---
+                  Text(
+                    "مواصفات المنتج",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: productController.ramController,
+                    decoration: const InputDecoration(labelText: "RAM"),
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: productController.storageController,
+                    decoration: const InputDecoration(labelText: "Storage"),
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: productController.colorController,
+                    decoration: const InputDecoration(labelText: "Color"),
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: productController.displayController,
+                    decoration: const InputDecoration(labelText: "Display"),
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: productController.batteryController,
+                    decoration: const InputDecoration(labelText: "Battery"),
                   ),
                   const SizedBox(height: 16),
 
-                  // ✅ الحالة
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade50,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.grey.shade300),
-                    ),
-                    child: GetBuilder<ProductController>(
-                      builder: (controller) {
-                        return SwitchListTile(
-                          value: controller.isActive,
-                          title: const Text("حالة المنتج"),
-                          subtitle: Text(
-                            controller.isActive ? "نشط" : "غير نشط",
-                            style: TextStyle(
-                              color: controller.isActive
-                                  ? Colors.green
-                                  : Colors.grey,
-                              fontSize: 12,
-                            ),
-                          ),
-                          activeColor: Colors.green,
-                          onChanged: (val) {
-                            controller.isActive = val;
-                            controller.update();
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // ✅ زر التحديث
+                  // --- زر الحفظ ---
                   SizedBox(
                     width: double.infinity,
-                    child: ElevatedButton.icon(
+                    child: ElevatedButton(
                       onPressed: () async {
                         if (productController.formState.currentState!
                             .validate()) {
-                          // تحديث القيم في الموديل
                           final updatedProduct = product.copyWith(
                             name: productController.nameController.text,
                             sku: productController.skuController.text,
@@ -486,19 +457,20 @@ class _ProductsPageState extends State<ProductsPage> {
                                   productController.stockController.text,
                                 ) ??
                                 0,
-                            categoryId: productController.categoryId,
-                            brandId: productController.brandId,
                             isActive: productController.isActive,
                             features: {
-                              'RAM': productController.ramController.text,
-                              'Storage':
+                              'ram': productController.ramController.text,
+                              'storage':
                                   productController.storageController.text,
-                              'Color': productController.colorController.text,
-                              'Display':
+                              'color': productController.colorController.text,
+                              'display':
                                   productController.displayController.text,
-                              'Battery':
+                              'battery':
                                   productController.batteryController.text,
                             },
+                            imageUrl: productController.pickedImage != null
+                                ? productController.pickedImage!.path
+                                : product.imageUrl,
                           );
 
                           await productController.saveUpdatedProduct(
@@ -507,16 +479,7 @@ class _ProductsPageState extends State<ProductsPage> {
                           Navigator.pop(context);
                         }
                       },
-
-                      icon: const Icon(Icons.save),
-                      label: const Text("تحديث"),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
+                      child: const Text("تحديث"),
                     ),
                   ),
                 ],
@@ -527,6 +490,7 @@ class _ProductsPageState extends State<ProductsPage> {
       },
     );
   }
+
 
   void _showAddProductDialog(BuildContext context) {
     final productController = Get.find<ProductController>();
