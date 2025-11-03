@@ -55,14 +55,7 @@ class _DashboardPageState extends State<DashboardPage> {
             },
           ),
         ),
-        // actions: [
-        //   IconButton(
-        //     icon: const Icon(Icons.notifications_outlined),
-        //     onPressed: () {
-        //       // إشعارات
-        //     },
-        //   ),
-        // ],
+       
       ),
       drawer: Drawer(
         child: Column(
@@ -596,8 +589,7 @@ class _DashboardPageState extends State<DashboardPage> {
       ],
     );
   }
-
-  IconData getIconData(int index) {
+IconData getIconData(int index) {
     switch (index) {
       case 0:
         return Icons.home_rounded;
@@ -607,8 +599,13 @@ class _DashboardPageState extends State<DashboardPage> {
         return Icons.business_rounded;
       case 3:
         return Icons.shopping_cart_rounded;
+      case 4: // الطلبات
+        return Icons.list_alt_rounded;
+      case 5: // العروض
+        return Icons.local_offer_rounded;
       default:
         return Icons.help_rounded;
     }
   }
+
 }
