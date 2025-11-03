@@ -56,7 +56,7 @@ class BrandController extends GetxController {
       fetchBrands();
       Get.snackbar(
         "تم الإضافة ✅",
-        "تم إضافة الماركة بنجاح",
+        "تم إضافة الشركة بنجاح",
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.green.shade50,
         colorText: Colors.green.shade700,
@@ -64,7 +64,7 @@ class BrandController extends GetxController {
     } else {
       Get.snackbar(
         "فشل الإضافة ❌",
-        "حدث خطأ أثناء إضافة الماركة",
+        "حدث خطأ أثناء إضافة الشركة",
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red.shade50,
         colorText: Colors.red.shade700,
@@ -81,14 +81,14 @@ class BrandController extends GetxController {
     bool newStatus = brand.isActive;
 
     await Get.defaultDialog(
-      title: "تعديل الماركة",
+      title: "تعديل الشركة",
       content: StatefulBuilder(
         builder: (context, setState) {
           return Column(
             children: [
               TextFormField(
                 initialValue: newName,
-                decoration: const InputDecoration(labelText: "اسم الماركة"),
+                decoration: const InputDecoration(labelText: "اسم الشركة"),
                 onChanged: (val) => newName = val,
               ),
               const SizedBox(height: 10),
@@ -126,9 +126,9 @@ class BrandController extends GetxController {
           brand.name = newName.trim();
           brand.isActive = newStatus;
           update();
-          Get.snackbar("تم ✅", "تم تحديث الماركة بنجاح 🎉");
+          Get.snackbar("تم ✅", "تم تحديث الشركة بنجاح 🎉");
         } else {
-          Get.snackbar("فشل ❌", "تعذر تحديث الماركة. حاول مرة أخرى.");
+          Get.snackbar("فشل ❌", "تعذر تحديث الشركة. حاول مرة أخرى.");
         }
 
         isLoading = false;

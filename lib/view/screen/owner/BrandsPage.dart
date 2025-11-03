@@ -65,7 +65,7 @@ class BrandsPage extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 const Text(
-                  "إضافة ماركة جديدة",
+                  "إضافة شركة جديدة",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ],
@@ -74,8 +74,8 @@ class BrandsPage extends StatelessWidget {
             TextFormField(
               controller: controller.nameController,
               decoration: InputDecoration(
-                labelText: "اسم الماركة",
-                hintText: "أدخل اسم الماركة",
+                labelText: "اسم الشركة",
+                hintText: "أدخل اسم الشركة",
                 prefixIcon: const Icon(Icons.business_outlined),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -104,7 +104,7 @@ class BrandsPage extends StatelessWidget {
               child: SwitchListTile(
                 value: controller.isActive,
                 title: const Text(
-                  "حالة الماركة",
+                  "حالة الشركة",
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
                 subtitle: Text(
@@ -132,7 +132,7 @@ class BrandsPage extends StatelessWidget {
                 onPressed: controller.createBrand,
                 icon: const Icon(Icons.add_rounded),
                 label: const Text(
-                  "إضافة الماركة",
+                  "إضافة الشركة",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 style: ElevatedButton.styleFrom(
@@ -168,7 +168,7 @@ class BrandsPage extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            "قم بإضافة ماركة جديدة من الأعلى",
+            "قم بإضافة شركة جديدة من الأعلى",
             style: TextStyle(fontSize: 14, color: Colors.grey.shade500),
           ),
         ],
@@ -299,7 +299,7 @@ class BrandsPage extends StatelessWidget {
             Text("تأكيد الحذف"),
           ],
         ),
-        content: Text("هل أنت متأكد من حذف الماركة '${brand.name}'؟"),
+        content: Text("هل أنت متأكد من حذف الشركة '${brand.name}'؟"),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
@@ -315,7 +315,7 @@ class BrandsPage extends StatelessWidget {
                 if (result == Staterequest.success) {
                   Get.snackbar(
                     "تم الحذف ✅",
-                    "تم حذف الماركة بنجاح",
+                    "تم حذف الشركة بنجاح",
                     snackPosition: SnackPosition.BOTTOM,
                     backgroundColor: Colors.green.shade50,
                     colorText: Colors.green.shade700,
@@ -323,7 +323,7 @@ class BrandsPage extends StatelessWidget {
                 } else {
                   Get.snackbar(
                     "فشل الحذف ❌",
-                    "حدث خطأ أثناء حذف الماركة. حاول مجددًا.",
+                    "حدث خطأ أثناء حذف الشركة. حاول مجددًا.",
                     snackPosition: SnackPosition.BOTTOM,
                     backgroundColor: Colors.red.shade50,
                     colorText: Colors.red.shade700,

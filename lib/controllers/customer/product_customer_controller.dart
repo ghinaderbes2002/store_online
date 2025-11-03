@@ -163,7 +163,10 @@ class ProductCustomerController extends GetxController {
 
       final brands = await productService.fetchBrands();
 
-      availableCompanies = brands.map((b) => b['name'].toString()).toList();
+      // دمج الـ id والاسم بصيغة "id|name"
+      availableCompanies = brands
+          .map((b) => "${b['id']}|${b['name']}")
+          .toList();
 
       isLoading = false;
       update();
@@ -173,6 +176,7 @@ class ProductCustomerController extends GetxController {
       update();
     }
   }
+
 
   // جلب تفاصيل منتج
   Future<void> fetchProductDetails(int productId) async {
