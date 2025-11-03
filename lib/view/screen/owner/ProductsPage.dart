@@ -5,6 +5,7 @@ import 'package:online_store/controllers/owner/brand_controller.dart';
 import 'package:online_store/controllers/owner/product_controller.dart';
 import 'package:online_store/core/constant/App_link.dart';
 import 'package:online_store/model/product_model.dart';
+import 'package:online_store/view/screen/customer/FullImagePage.dart';
 
 class ProductsPage extends StatefulWidget {
   const ProductsPage({super.key});
@@ -97,16 +98,25 @@ class _ProductsPageState extends State<ProductsPage> {
                             ),
                             child: ListTile(
                               contentPadding: const EdgeInsets.all(12),
-                              leading:
+                            leading:
                                   product.imageUrl != null &&
                                       product.imageUrl!.isNotEmpty
                                   ? ClipRRect(
                                       borderRadius: BorderRadius.circular(8),
-                                      child: Image.network(
-                                        "${ServerConfig().serverLink}${product.imageUrl!}", // دمج السيرفر مع المسار
-                                        width: 60,
-                                        height: 60,
-                                        fit: BoxFit.cover,
+                                      child: InkWell(
+                                        onTap: () {
+                                          Get.to(
+                                            () => FullImagePage(
+                                              imageUrl: product.imageUrl!,
+                                            ),
+                                          );
+                                        },
+                                        child: Image.network(
+                                          "${ServerConfig().serverLink}${product.imageUrl!}",
+                                          width: 60,
+                                          height: 60,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     )
                                   : Container(
@@ -124,6 +134,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                         size: 30,
                                       ),
                                     ),
+
                               title: Text(
                                 product.name,
                                 style: const TextStyle(
@@ -153,7 +164,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                     children: [
                                       _buildInfoChip(
                                         Icons.attach_money,
-                                        "${product.priceCents} سنت",
+                                        "${product.priceCents} ",
                                         Colors.green,
                                       ),
                                       _buildInfoChip(
