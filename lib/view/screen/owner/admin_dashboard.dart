@@ -236,41 +236,6 @@ class _DashboardPageState extends State<DashboardPage> {
                 );
               },
             ),
-
-            // Padding(
-            //   padding: const EdgeInsets.all(16),
-            //   child: Row(
-            //     children: [
-            //       CircleAvatar(
-            //         backgroundColor: Colors.blue.shade100,
-            //         child: const Icon(Icons.person, color: Colors.blue),
-            //       ),
-            //       const SizedBox(width: 12),
-            //       // Expanded(
-            //       //   child: Column(
-            //       //     crossAxisAlignment: CrossAxisAlignment.start,
-            //       //     mainAxisSize: MainAxisSize.min,
-            //       //     children: [
-            //       //       const Text(
-            //       //         "المدير",
-            //       //         style: TextStyle(
-            //       //           fontWeight: FontWeight.bold,
-            //       //           fontSize: 14,
-            //       //         ),
-            //       //       ),
-            //       //       Text(
-            //       //         "admin@store.com",
-            //       //         style: TextStyle(
-            //       //           color: Colors.grey.shade600,
-            //       //           fontSize: 12,
-            //       //         ),
-            //       //       ),
-            //       //     ],
-            //       //   ),
-            //       // ),
-            //     ],
-            //   ),
-            // ),
           ],
         ),
       ),

@@ -5,6 +5,7 @@ import 'package:online_store/core/classes/staterequest.dart';
 import 'package:online_store/core/constant/App_routes.dart';
 import 'package:online_store/core/function/validinput.dart';
 import 'package:online_store/core/them/app_colors.dart';
+import 'package:online_store/view/screen/ChangeServerDialog.dart';
 import 'package:online_store/view/widget/auth/CustomButton.dart';
 import 'package:online_store/view/widget/auth/CustomTextFormFiled.dart';
 
@@ -77,17 +78,18 @@ class Login extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 40),
 
-                                // Username Field
-                                // CustomTextFormField(
-                                //   controller: controller.username,
-                                //   label: ' الاسم الكامل ',
-                                //   hintText: 'أدخل الاسم الكامل',
-                                //   prefixIcon: Icons.person_outline,
-                                //   validator: (val) =>
-                                //       validInput(val!, 3, 100, "username"),
-                                //   isDarkMode: false,
-                                // ),
-                                // const SizedBox(height: 20),
+                                TextButton(
+                                  onPressed: () {
+                                    Get.defaultDialog(
+                                      title: "تغيير السيرفر",
+                                      content:
+                                          ChangeServerDialog(), // <--- هي هون
+                                    );
+                                  },
+                                  child: Text("تغيير عنوان السيرفر"),
+                                ),
+
+                            
                                 CustomTextFormField(
                                   controller: controller.phone,
                                   label: 'رقم الهاتف',
